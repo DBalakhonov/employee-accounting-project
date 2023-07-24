@@ -21,6 +21,10 @@ public class EmployeeController {
     public List<EmployeeDTO> getEmployeesById(@PathVariable int id) {
         return employeeService.getEmployeeById(id);
     }
+    @GetMapping("/test")
+    public List<Employee> getEmployeeByName(){
+        return employeeService.getEmployeeByName();
+    }
 
     @PostMapping("/add")
     public void addEmployees(@RequestBody Employee employee){
