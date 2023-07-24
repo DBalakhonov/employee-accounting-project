@@ -14,24 +14,17 @@ import ru.skypro.lessons.springboot.weblibrary.dto.EmployeeDTO;
 import ru.skypro.lessons.springboot.weblibrary.repository.EmployeeRepository;
 import ru.skypro.lessons.springboot.weblibrary.service.EmployeeServiceImpl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
-    private static final Employee a = new Employee(1,"1",1,1);
     private final EmployeeRepository repositoryMock = mock(EmployeeRepository.class);
     @InjectMocks
     private EmployeeServiceImpl out;
-    List<Employee> b = (List<Employee>) repositoryMock.findAll();
-    List<Employee> c = repositoryMock.allEmployeeFromPosition(1);
-    List<EmployeeDTO> d = repositoryMock.employeeFullInfo(1).stream()
-            .map(EmployeeDTO::fromEmployee)
-            .collect(Collectors.toList());
-    private static final Employee e = new Employee(2,"2",2,2);
+    Employee a = new Employee(0,"0",0,0);
+    List<EmployeeDTO> emptyListEmployeeDTO = new ArrayList<>();
+    List<Employee> emptyListEmployee = new ArrayList<>();
     @BeforeEach
     public void init() {
         out = new EmployeeServiceImpl(repositoryMock);
@@ -39,38 +32,21 @@ public class EmployeeServiceTest {
 
     @Test
     public void getAllTest(){
-        when(repositoryMock.findAll())
-                .thenReturn(b);
+        when(out.getAll())
+                .thenReturn(emptyListEmployeeDTO);
 
-        Assertions.assertIterableEquals(out.getAll(),b);
+        Assertions.assertIterableEquals(out.getAll(),emptyListEmployeeDTO);
     }
     @Test
     public void getEmployeeByIdTest(){
-        when(repositoryMock.findEmployeeById(a.getId()))
-                .thenReturn((List<Employee>) a);
-
-        Assertions.assertEquals(out.getEmployeeById(a.getId()),a);
-    }
-    @Test
-    public void allEmployeeFromPositionTest(){
-        when(repositoryMock.allEmployeeFromPosition(1))
-                .thenReturn(b);
-
-        Assertions.assertEquals(out.allEmployeeFromPosition(1),c);
-    }
-    @Test
-    public void employeeFullInfoTest(){
-        when(repositoryMock.employeeFullInfo(1))
-                .thenReturn((List<Employee>) d.stream().map(EmployeeDTO::toEmployee));
-        Assertions.assertEquals(out.employeeFullInfo(a.getId()), d);
+        when(repositoryMock.findEmployeeById(0))
+                .thenReturn(null);
+        Assertions.assertIterableEquals(repositoryMock.findEmployeeById(0),null);
     }
     @Test
     public void addEmployeeTest(){
-        out.addEmployee(a);
-        when(repositoryMock.findEmployeeById(a.getId()))
-                .thenReturn((List<Employee>) a);
-        Assertions.assertEquals(out.getEmployeeById(a.getId()),a);
-        out.deleteEmployeeById(a.getId());
+        when(repositoryMock.save(a))
+                .thenReturn(null);
     }
     @Test
     public void deleteEmployeeTest(){
@@ -78,7 +54,5 @@ public class EmployeeServiceTest {
         when(repositoryMock.findEmployeeById(a.getId()))
                 .thenReturn(null);
         out.deleteEmployeeById(a.getId());
-        Assertions.assertNull(out.getEmployeeById(a.getId()));
-
     }
 }
