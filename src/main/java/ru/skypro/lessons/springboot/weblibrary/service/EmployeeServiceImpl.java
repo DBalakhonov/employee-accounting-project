@@ -82,4 +82,11 @@ public class EmployeeServiceImpl {
             return back;
         }
     }
+
+    public List<Employee> getEmployeeByName() {
+        return employeeRepository.findAllEmployees().stream()
+                .filter(s -> s.getName().startsWith("A"))
+                .sorted()
+                .collect(Collectors.toList());
+    }
 }
